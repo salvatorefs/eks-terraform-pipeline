@@ -36,3 +36,20 @@ module "eks" {
     }
   }
 }
+resource "aws_kms_alias" "this" {
+  name          = "alias/eks/k8s-demo"
+  target_key_id = aws_kms_key.this.id
+
+  lifecycle {
+    ignore_changes = [name]
+    create_before_destroy = true
+  }
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  name = "/aws/eks/k8s-demo/cluster"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
